@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>凡雪一生 · 张小凡与陆雪琪</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #06060a; }
+  body {
+    color: #dedbd4;
+    font-family: "Songti SC", "SimSun", "Noto Serif SC", serif;
+    line-height: 2.05; letter-spacing: .015em; -webkit-font-smoothing: antialiased;
+  }
+
+  /* ---------- 视频背景板 ---------- */
+  #bgwrap { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: #06060a; }
+  #bgwrap video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; opacity: 0;
+  }
+  #veil {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none;
+    background:
+      radial-gradient(ellipse at 50% 0%, rgba(10,11,16,.55), transparent 55%),
+      linear-gradient(180deg, rgba(7,8,12,.84) 0%, rgba(7,8,12,.72) 42%, rgba(7,8,12,.88) 100%);
+  }
+  #grain {
+    position: fixed; inset: 0; z-index: 1; pointer-events: none; opacity: .035;
+    background-image: repeating-linear-gradient(0deg, #fff 0 1px, transparent 1px 3px);
+  }
+  .bgctl {
+    position: fixed; right: 18px; bottom: 18px; z-index: 30;
+    display: flex; gap: 8px; align-items: center;
+  }
+  .bgctl button {
+    font-family: inherit; font-size: 12px; color: #b3aea6; cursor: pointer;
+    background: rgba(16,17,22,.78); border: 1px solid #2a2c34;
+    border-radius: 999px; padding: 7px 14px; backdrop-filter: blur(8px);
+    transition: .18s; letter-spacing: .06em;
+  }
+  .bgctl button:hover { color: #efece6; border-color: #4a4d58; }
+
+  #prog {
+    position: fixed; top: 0; left: 0; height: 3px; width: 0; z-index: 40;
+    background: linear-gradient(90deg, #8d7a56, #cbb68c); transition: width .1s linear;
+  }
+
+  /* ---------- 正文 ---------- */
+  .wrap { position: relative; z-index: 2; max-width: 780px; margin: 0 auto; padding: 0 30px 150px; }
+  header { padding: 116px 0 26px; text-align: center; }
+  h1 {
+    font-size: clamp(27px, 5vw, 42px); letter-spacing: .18em; font-weight: 400;
+    color: #f2eee7; text-shadow: 0 2px 24px rgba(0,0,0,.75);
+  }
+  .sub { margin-top: 22px; color: #928d84; font-size: 14px; line-height: 2.1; letter-spacing: .16em; }
+  .rule { width: 44px; height: 1px; background: #4a4b52; margin: 34px auto; }
+  .toc { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; margin-top: 32px; }
+  .toc a {
+    color: #a09b92; text-decoration: none; font-size: 13px;
+    border: 1px solid rgba(70,73,84,.8); border-radius: 999px; padding: 6px 14px;
+    background: rgba(12,13,18,.45); backdrop-filter: blur(6px);
+    transition: .2s; letter-spacing: .08em;
+  }
+  .toc a:hover { color: #f0ece4; border-color: #5b5f6d; }
+  .toc a.on { color: #0c0d12; background: #cbb68c; border-color: #cbb68c; }
+
+  .act { margin: 100px 0 48px; text-align: center; }
+  .act .n { font-size: 12px; letter-spacing: .5em; color: #a08c62; }
+  .act h2 {
+    font-size: clamp(19px, 3vw, 24px); font-weight: 400; letter-spacing: .28em;
+    color: #eee9e0; margin: 16px 0 14px; text-shadow: 0 2px 20px rgba(0,0,0,.8);
+  }
+  .act p { color: #8f8a82; font-size: 14px; letter-spacing: .06em; }
+
+  section { margin: 0 0 80px; scroll-margin-top: 40px; }
+  section h3 {
+    font-size: 20px; font-weight: 400; letter-spacing: .16em; color: #f2eee7;
+    margin-bottom: 10px; text-shadow: 0 2px 20px rgba(0,0,0,.8);
+  }
+  section .meta { color: #837e76; font-size: 13px; letter-spacing: .18em; margin-bottom: 30px; }
+  section .meta::after { content: ""; display: block; width: 30px; height: 1px; background: #3a3c44; margin-top: 16px; }
+  section > p { font-size: 17px; margin-bottom: 20px; text-indent: 2em; color: #dcd8d1; }
+  section > p.short { text-indent: 0; color: #efe9dd; }
+
+  /* ---------- 心理活动 ---------- */
+  .inner {
+    margin: 24px 0 24px 2em; padding: 2px 0 2px 18px;
+    border-left: 2px solid #3a3d47;
+  }
+  .inner .who {
+    display: block; font-size: 11px; letter-spacing: .3em; margin-bottom: 7px;
+    color: #8d7a56; font-family: "Microsoft YaHei", "PingFang SC", sans-serif;
+  }
+  .inner p {
+    font-size: 16px; text-indent: 0; margin: 0; color: #b6b1a9;
+    font-style: italic; line-height: 2;
+  }
+  .inner.he { border-left-color: #46596e; }
+  .inner.he .who { color: #8ba4bf; }
+  .inner.she { border-left-color: #6d6053; }
+  .inner.she .who { color: #c2ab8a; }
+
+  .end { text-align: center; color: #a08c62; letter-spacing: .4em; margin: 90px 0 30px; font-size: 14px; }
+  footer {
+    margin-top: 20px; padding-top: 28px; border-top: 1px solid rgba(40,42,50,.9);
+    color: #7b776f; font-size: 13px; line-height: 2; letter-spacing: .04em;
+  }
+  footer p { margin-bottom: 8px; }
+</style>
+</head>
+<body>
+<div id="prog"></div>
+
+<div id="bgwrap">
+  <video id="vA" src="assets/background.mp4" muted playsinline preload="auto"></video>
+  <video id="vB" src="assets/background.mp4" muted playsinline preload="auto"></video>
+</div>
+<div id="veil"></div>
+<div id="grain"></div>
+<div class="bgctl">
+  <button id="bgToggle">背景 开</button>
+  <button id="bgPause">暂停</button>
+</div>
+
+<div class="wrap">
+  <header>
+    <h1>凡雪一生 · 张小凡与陆雪琪</h1>
+    <div class="rule"></div>
+    <div class="sub">一个完整的故事<br>四幕 · 十二段<br>附两人心理活动 · 从青云山的比武台，到大竹峰的一盏红灯笼</div>
+    <nav class="toc">
+      <a href="#c1">引子</a>
+      <a href="#c2">一 七脉会武</a>
+      <a href="#c3">二 死灵渊</a>
+      <a href="#c4">三 流波山</a>
+      <a href="#c5">四 十年殊途</a>
+      <a href="#c6">五 天帝宝库</a>
+      <a href="#c7">六 七里峒 深痕</a>
+      <a href="#c8">七 苗疆大战</a>
+      <a href="#c9">八 月下逢</a>
+      <a href="#c10">九 八荒火龙</a>
+      <a href="#c11">十 冷崖定情</a>
+      <a href="#c12">十一 义庄大战</a>
+      <a href="#c13">十二 红鸾笑</a>
+    </nav>
+  </header>
+
+  
+  <section id="c1">
+  <h3>引子 · 草庙村</h3>
+  <div class="meta">青云山脚下 · 多年前</div>
+  <p class="short">那件事发生在一个没有月亮的夜里。</p>
+  <p>草庙村一夜之间被杀了个干净，天亮时只剩下两个活着的孩子。青云门的人赶到，把其中一个哭得撕心裂肺的男孩抱走了，也把另一个从头到尾没掉一滴眼泪的男孩带走了。</p>
+  <p>哭的那个叫林惊羽，后来进了龙首峰，天资好，学什么都快，很快有了名字。没哭的那个叫张小凡，后来进了大竹峰。</p>
+  <p>田不易收下他的时候犹豫过。这孩子根骨平常，学剑也慢，同一套剑法别人练三遍，他要练三十遍，练完了还是那副笨样子。师兄们拿他打趣，他低着头笑一笑，从不还嘴。厨房缺人手，他就去厨房；柴火不够，他就去劈柴，劈到天黑，手心磨出泡，第二天接着劈。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他那时候不太明白，为什么别人练一遍就会的东西，他要练三十遍。他只知道，如果三十遍还是不会，那就练六十遍。反正他也没别的地方可去。</p></div>
+  <p>柴房角落里有一根黑黢黢的短棒，不知道是谁丢在那儿的。他拿它垫过柴、挑过水桶、吓过闯进来的野狗，用久了顺手，就一直带在身上。</p>
+  <p>那时候谁都没把那根棒子当回事。连他自己也没有。</p>
+  <p>青云山最高的一座峰叫小竹峰。峰上住着一个比他更不爱说话的姑娘：白衣，一柄天琊剑，剑一出鞘，满山的雾都要退开半步。门中人都说，那是青云门的天才。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>小竹峰上很少有人说话，她习惯了。师父夸她心性最好，其实她只是不知道该怎么开口。这个毛病后来跟了她一辈子，她自己也是很久以后才承认的。</p></div>
+  <p class="short">那时候，他们连一句话都没说过。</p>
+  </section>
+  <div class="act">
+  <div class="n">第 一 幕</div>
+  <h2>相遇与失去</h2>
+  <p>两个人被放进同一个世界，又被命运拆开。</p>
+  </div>
+  <section id="c2">
+  <h3>一 · 七脉会武</h3>
+  <div class="meta">青云山 · 少年时</div>
+  <p>七脉会武十年一次。各峰挑出最出色的弟子，在通天峰上比个高下。这种场合向来和大竹峰没什么关系，更和张小凡没什么关系。</p>
+  <p>是田不易把他报上去的，理由很实在：大竹峰总得有人上。师兄们私下里摇头，说这一场能撑过第一轮就算不错。</p>
+  <p>第一轮他输了半场才翻回来。第二轮对手是个使刀的师兄，招式又稳又漂亮，他被压着打了很久，最后靠着不肯松手，硬是把人拖到力竭。看台上开始有人觉得有意思。第三轮、第四轮之后，看台上的人已经记住了这个不按章法的少年，和他手里那根不像兵器的黑棒子。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他其实没想那么多。他每次上台只做一件事：被打倒之后数到三，然后站起来。数到三之前，他会偷偷抬头看一眼天，告诉自己还没结束。</p></div>
+  <p class="short">他一路打进了四强。</p>
+  <p class="short">四强的对手是陆雪琪。</p>
+  <p>她走上比武台的时候很安静。白衣，步子不快不慢，天琊剑出鞘的那一声清响，全场都听得见。张小凡站在对面，第一次离她这么近。他后来回忆不起来当时心里在想什么，只记得风很大，她的衣角一直在动。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他想的不是输赢。他想的是，原来站这么近看，她的剑上有很细的纹路，像水面上结了薄冰。他赶紧把眼睛低下去，耳朵却先热了。</p></div>
+  <p>比试开始的那一刻，他才明白什么叫差距。</p>
+  <p>神剑御雷真诀落下来，他整个人被撞得往后退了很远，胸口发闷，耳朵里全是嗡鸣。他站起来，又被打退，再站起来。看台上有人笑，笑着笑着就不笑了。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>第一击之后，她本该收势。可那个少年又站了起来。她心里第一次生出一点说不清的东西——不是欣赏，也不只是意外，更像是：原来还有人这样活着。</p></div>
+  <p>他没能赢。最后一击之后，他坐在台上，抬头看见那身白衣收剑入鞘。陆雪琪站在台边看了他一眼——不是看对手的那种看，也不是看笑话的那种看，只是很认真地看了他一眼，然后转身走了。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>走下台的时候，她对自己说，那只是多看了一眼而已。这句话她对自己说了很多年，说到连自己都不太信为止。</p></div>
+  <p>就那一眼，张小凡在心里放了很多年。</p>
+  </section>
+  <section id="c3">
+  <h3>二 · 死灵渊</h3>
+  <div class="meta">空桑山 · 那年秋天</div>
+  <p>会武之后不久，青云门派了几名弟子下山，去空桑山查探魔教的踪迹。同行的有张小凡、陆雪琪，还有几个别峰的师兄弟。</p>
+  <p>空桑山常年不见太阳，山腹里是万蝠古窟。</p>
+  <p>古窟深处，他们撞上了不该撞见的东西。混乱中张小凡挡在了陆雪琪前面——那是本能。他后来想，大概是因为他跑得慢，所以总是最后那个挡在前面的人。也是从那时候起，她看他的眼神变了。那种变化很小，小到她自己都不愿意承认。</p>
+  <p class="short">真正的转折在死灵渊。</p>
+  <p>渊口是一道裂开的山崖，底下黑得像没有底。为了救她，张小凡被黑水玄蛇逼到了崖边，脚下的石头碎了，人掉了下去。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>往下掉的那一瞬，他脑子里只有一件事：还好是我。她没事就好。这个念头比恐惧来得还快，他自己都没来得及惊讶。</p></div>
+  <p>下落的时候他听见上面有人喊了一声。他甚至来不及分辨那是谁。</p>
+  <p>然后他看见一道白色的影子，跟着他一起掉了下去。</p>
+  <p>陆雪琪没有犹豫。天琊剑出鞘，她纵身跃下。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她跳下去的时候没有想。真要说想，她只想到一句：他刚才挡在我前面。就这一句，够了。</p></div>
+  <p>渊底湿冷，不见天光，石壁又滑又陡。两个人一个受了伤，一个内力透支，只能贴着崖壁慢慢挪，走一阵歇一阵。第一夜张小凡发起热来，是她一直给他输送内力。第二夜她撑不住了，靠着石壁睡过去，醒来时发现自己手里握着另一只手。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他烧得迷迷糊糊，中间醒过一次，感觉手里握着什么。他没有睁眼，也没有动。他怕一睁眼，那东西就没了。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>醒来的时候她愣了很长时间。最后她还是没松开。她对自己说，是怕他冷。</p></div>
+  <p class="short">他睡着了，手却一直没松。</p>
+  <p>谁都没有提这件事。后来他们找到了出路，回到青云山，各自回去，各自修行。她依旧是那个话很少的小竹峰弟子，他依旧是那个在厨房帮忙的大竹峰弟子。</p>
+  <p>只是从那年秋天起，有些东西不一样了。</p>
+  </section>
+  <section id="c4">
+  <h3>三 · 流波山</h3>
+  <div class="meta">流波山 · 那一年</div>
+  <p>从空桑山回来之后没多久，青云门与魔教在流波山对峙了一场。那段时间山上乱，人心也乱。</p>
+  <p>张小凡那阵子不太对劲。他见过碧瑶，也知道了些不该知道的事，心里像塞了一团湿棉花，说不清也甩不掉。别人都在忙，只有他一个人站在雨里发呆。</p>
+  <p class="short">是陆雪琪找到了他。</p>
+  <p>她什么都没问，只是站在他旁边，陪他一起淋那场雨。等雨停了，两个人都湿透了，她递给他一块干布，自己却先咳嗽起来——她那天本来就带着内伤，一直没跟人说。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她本来是来问一件事的。走到跟前，看见他那副样子，问不出口了。她想，那就站一会儿吧，反正她也没什么要紧事。</p></div>
+  <p>后来轮到他替她输送内力疗伤。隔着薄薄的衣料，指尖碰到她手腕的时候是凉的。两个人都愣了一下，谁也没动，谁也没说话。最后是他先把手收回去，耳朵红到了脖子。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他那时候想到的是碧瑶。他想，自己怎么能在这种时候，因为别人的一只手腕慌成这样。他为这一点心慌了很久，久到忘了那其实是他第一次离一个人这么近。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她比他先反应过来。她把手收回去，说了一句"我没事"，声音却比平时低。她是那时候知道自己完了——她居然会嫉妒一个还没见过面的名字。</p></div>
+  <p>雨停之后他问她，为什么来找他。她说，路过。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>这两个字他信了很多年。后来他才知道，小竹峰到这儿的山道要绕半个山头，根本不是路过的方向。</p></div>
+  <p>流波山之后，他们的关系没有变好，也没有变坏。只是从那一年起，他每次见到她，都要先在心里稳一稳。</p>
+  </section>
+  <section id="c5">
+  <h3>四 · 十年殊途</h3>
+  <div class="meta">青云山 · 那一场大战之后</div>
+  <p class="short">正魔大战来得比所有人预料的都早。</p>
+  <p>道玄真人祭出诛仙剑。剑阵之下，碧瑶用痴情咒替张小凡挡下了那一击，从此沉睡在寒冰石室里。</p>
+  <p class="short">那一天之后，张小凡离开了青云门。</p>
+  <p>他没有跟任何人告别。他去的方向是鬼王宗。从此世上少了一个笨手笨脚的大竹峰弟子，多了一个叫鬼厉的人。鬼王宗的人叫他血公子，江湖上关于他的传闻一年比一年凶：出手不留情，杀人不见血。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他不是没想过回去。走到青云山脚下的次数不止一次。只是每次抬头看见那片云，他就想起剑阵落下来的时候自己在做什么，然后就转身了。</p></div>
+  <p>他确实在拼命。他找遍了能找的地方，问遍了能问的人，只为一件事——把那个人从死里带回来。十年时间，被他过成了一场没有尽头的追债。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他偶尔会梦见山里的一间厨房、一堆劈好的柴。醒来以后他会坐着发很久的呆，然后继续赶路。他不敢承认那间厨房对他的意义，因为他一旦承认，就等于是承认自己已经走错了路。</p></div>
+  <p class="short">而陆雪琪留在了山上。</p>
+  <p>她没有一天懈怠过。十年里，她成了小竹峰首座最倚重的弟子，也成了青云门年轻一辈里最常被提起的那个名字。一样的白衣，一样的寡言，只是别人提起她的时候，语气里多了几分敬畏。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>那间旧屋子的门，她每年都会去开一次、扫一次。她从没跟别人解释过为什么，也从来没让自己想明白过为什么。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她知道他在哪里。这十年里，她一次也没有去找。不是不想，是她比谁都清楚——她要的是一个能回来的人，而不是一个被她拉回来的鬼。</p></div>
+  <p class="short">十年里，他们在同一片天底下活着。</p>
+  <p class="short">再没有见过一面。</p>
+  </section>
+  <div class="act">
+  <div class="n">第 二 幕</div>
+  <h2>重逢与求不得</h2>
+  <p>十年后再见已是敌我。而这一次，连最后的指望也碎在眼前。</p>
+  </div>
+  <section id="c6">
+  <h3>五 · 天帝宝库</h3>
+  <div class="meta">死泽 · 十年后</div>
+  <p>死泽是活人不该进去的地方。终年不散的瘴气把天压得很低，水是黑的，脚踩下去先陷半尺。当地人有句话：进死泽的人分三种——走出去的、没走出去的，和走回来却已经不是原来那个人的。鬼厉听完什么也没说，第二天就带人进去了。</p>
+  <p>他为天帝宝库而来。传说那是上古留下的库藏，埋在死泽最深处，里头的东西能生死人、肉白骨。正魔两道都为它动了心：正道以陆雪琪为首，她一身白衣站在最前面；鬼厉是鬼王宗副宗主，走在魔教那一拨的最前。</p>
+  <p>第七天，雾散开一条缝，露出一道嵌在石壁里的门。没人推得动它，是它自己开的。</p>
+  <p>最先走进内殿的是一身玄衣的血公子。而站在他对面的，是白衣如故的小竹峰首座弟子。两人隔着满地的水光看了一眼，都没有动。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他以为自己会先看见她手里那把剑。可第一眼落上去的，是她瘦了——下巴尖了，白衣显得比从前宽，人还是站得那么直，却像一张拉得太紧的弓。这个念头冒出来的时候他自己都愣了一下：他这十年杀过很多人，手很稳，心也硬了，居然还是先看见了这个。</p></div>
+  <p>再往里走，身后的路塌了。落石砸下来时，两个人几乎是同时往对方那边挡了一下，做完才意识到自己在做什么。等尘埃落地，两拨人被隔在塌方两侧，这一边只剩他们两个。</p>
+  <p>那一段路只能一起走。廊道很窄，两侧是看不清深浅的黑水。中途火折子灭了，她脚下踩空，他伸手带了她半步，避开一道看不见的裂。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>指尖碰到她手腕的时候，他想起流波山那一年，也是手腕，也是凉的。他没想到过了十年，自己还记得这么清楚。</p></div>
+  <p>内殿中央那件东西悬在一层光里，看不出是兵器还是别的什么。围着它的人谁也不肯先伸手。鬼厉看了很久，也没有伸手——他忽然明白，自己要的从来不是这件东西，而是「还能救她」这件事继续成立。</p>
+  <p>剑是在门口出鞘的。她出手狠，狠在他不肯躲；他出手快，快在要收着三分力。最后剑尖抵住他的咽喉，他没有躲，也没有还手。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她的剑很稳。她问过自己一遍：如果他躲开，我会不会反而轻松些。答案是不知道。</p></div>
+  <p>僵持了很久，最先收剑的是她。宝库的机关开始一层层往外赶人，两拨人各自退出，石门在最后一个人出来之后自己合上，合得很轻，像从来没有开过。</p>
+  <p>那一趟，谁都没有拿到想要的东西。走出死泽时，鬼厉回头看了一眼那片雾。他知道自己不会再来了。</p>
+  </section>
+  <section id="c7">
+  <h3>六 · 七里峒 · 深痕</h3>
+  <div class="meta">七里峒 · 夜</div>
+  <p>苗疆的夜比中原凉。山里起雾，月亮常常只露出一角。</p>
+  <p>鬼厉在七里峒盘桓了些日子。那天夜里，他被引到峒外一片空地上，陆雪琪已经等在那里。白衣，手里握着天琊。</p>
+  <p class="short">她只说了一句：看我把这套剑舞完。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他以为她要说什么。可她什么也没说，只是抬起了剑。</p></div>
+  <p>起手很慢。剑尖划出去的时候，雾被切开一道口子，又慢慢合上。她的脚步始终没有离开过那方圆三丈，可每一剑都落在不同的地方——流波山的那场雨、死灵渊底下握了一夜的那只手、小竹峰上每年开一次门的旧屋子，全在里面。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他看懂了。看懂的那一瞬间，他浑身发凉。</p></div>
+  <p>这套剑舞叫深痕，是小竹峰传下来的。师父教她的时候说过，这套剑是往里刻的：每一剑，都在自己心上留一道痕。</p>
+  <p>她练了很多年，从来没有在别人面前舞过。</p>
+  <p>剑到中段忽然快了起来，快得看不清身形，只看得见一道白光在雾里绕。崖上的风被带得转了向，山谷里的灯一盏一盏跟着晃。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她心里只有一个念头：让他看清楚。这十年她没有一个地方可以说这些话，今天她用不着开口，就能把它们全说出来。说完，就不说了。</p></div>
+  <p class="short">最后一段收得很轻。</p>
+  <p>她起手，剑尖在半空里停了一瞬——那一瞬，前面所有的剑意都收拢到了一点上。然后她落剑。</p>
+  <p>落的不是杀招。那一剑落在她自己身前，干净利落，像割断了一根线。</p>
+  <p>雾慢慢合上，把刚才切开的那道口子填了回去。</p>
+  <p>她收剑入鞘，手很稳。她看着他说，舞完了。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他张了张嘴，一个字都没有说出来。他知道自己只要说一个字，这十年的路就全变了；也正是因为知道，他才说不出来。</p></div>
+  <p class="short">她等了一会儿。</p>
+  <p class="short">没有等到。</p>
+  <p>然后她转身走了。走之前她什么也没有留——该说的她都说了，用剑说的。</p>
+  <p class="short">那一夜之后，谁都没有再提这件事。</p>
+  <p>只是从那以后，深痕这两个字在他心里有了两层意思：一层是她那天晚上说出来的，一层是她那天晚上亲手剪掉的。</p>
+  </section>
+  <section id="c8">
+  <h3>七 · 苗疆大战</h3>
+  <div class="meta">南疆 · 兽神苏醒的那一年</div>
+  <p>十万大山在南疆最南边，终年瘴气不散。</p>
+  <p>那一年的瘴气比往年重。林子里的妖物先是不安分，后来成群往北涌。再往后，连不常出山的老人都说，是兽神醒了。</p>
+  <p>兽神要真正活过来，还差一样东西——南疆各族的圣器。于是巫妖动手了：他们没有直接抢，而是先挑，挑动山里的族群互斗，让乱起来的地方自己把圣器送出来。木族被说动，转头去袭金族，为的就是金族手里那件。</p>
+  <p class="short">大巫师来求鬼厉。</p>
+  <p>这件事本来跟他一点关系都没有。可大巫师开出的价码，是他找了十年的东西——一条也许能救回碧瑶的路。他答应了。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他知道这是拿一件根本不该答应的事去换的。他还是答应了。这十年他做过的每一件事，都是这么开头的。</p></div>
+  <p class="short">他带人进了南疆。</p>
+  <p>那一夜，木族的人摸上了金族的寨子。</p>
+  <p>他本来可以不管。巫妖的算计、族群的旧怨，都不是他要还的债。可他站在那儿，看着火把一路烧过去，看着寨门口的老人一退再退，还是拔了噬魂。</p>
+  <p>那一场打得很凶。木族来的人多，也狠，他一个人守在寨门口，从半夜杀到天快亮。血把门口那片地泡软了，踩上去粘脚。</p>
+  <p>噬魂是一把凶刀。它喜欢血，越见血越兴奋。这十年他一直压着它，压得住，是因为他知道自己在做什么。可那一夜不一样——杀到后半夜，他先听不见了。耳边没有风，没有喊杀，只剩噬魂在手里嗡嗡作响，像有人在旁边一直劝他：再杀一个，再杀一个就好了。</p>
+  <p>他下手的力道开始不对。木族的人开始退，他还在往前。等他回过神来，寨门外已经没有人站着了。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他低头看自己的手，那只手还在抖。他想不起来自己是什么时候越过了那条线。</p></div>
+  <p class="short">也就在这时候，正道的人到了。</p>
+  <p>兽神的事闹得太大，正道不可能不闻。青云门、焚香谷、天音寺各出了人，凑成一队南下查看。带队的不是道玄真人——他祭剑之后戾气缠身，已经很少露面了。</p>
+  <p>他们翻过最后一道山梁，看见的是一个玄衣人站在满地尸首中间，手里提着一把还在滴血的黑棍。金族的寨子烧塌了半边，火还没灭。</p>
+  <p class="short">没有人问他一句为什么。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>陆雪琪站在最前面。她认得那把棍子，也认得那个人。可她也看见了地上那些尸体——有木族的，也有几个穿着金族衣裳的。她心里冒出来的第一个念头不是"他不是这样的人"，而是"他刚才到底做了什么"。</p></div>
+  <p class="short">于是就成了遭遇战。</p>
+  <p>他刚从那场失控里挣出来，脑子还是钝的，出手却半点不慢，三两下就放倒了最前头几个。正道的人越围越紧，最后挡在他正面的，是陆雪琪。</p>
+  <p>她没有喊他的名字，也没有问他什么。她只做了一件事：抬剑，站在他正前面。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她刚刚在别处把一套剑舞完，亲手把一条线割断。她告诉自己线断了。然后她抬起了剑。</p></div>
+  <p>天琊出鞘，噬魂迎上。这一次她出手比从前更狠，招招都是杀招；他也接，却始终没有还手——他只是躲，只是挡，只是一步一步往后退。</p>
+  <p>打到第七合，她一剑直刺他心口。快，准，不留余地。</p>
+  <p class="short">他没有躲。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她看见他不但没躲，反而迎上来半步，左手抬起来按在她的剑背上，往自己身上带。</p></div>
+  <p>那一瞬间她什么都明白了：他自己也叫不醒自己了。所以他把这条命递到她手上——借她这一剑，让他停下来。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她的第一反应不是收手，是她的手腕先动了。按常理，一个刚刚决定斩断心迹的人，这时候该顺势把剑送进去。她也知道自己该。这个念头在她脑子里停留的时间，比剑尖到他胸口的时间还短。然后她的手做了另一件事。</p></div>
+  <p class="short">她把剑往回拔。</p>
+  <p>剑拔出来很难。他按着剑背，她往回拉，两个人的力气反着使，剑身发出很轻的一声响。她的手臂在抖，抖得连肩膀都跟着晃——她第一次当着人使出全力，为的是让这把剑不要刺进去。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她脑子里只有一个念头：不能是我。这十年里谁都可以杀他，不能是我，哪怕是他自己愿意。</p></div>
+  <p>最后她赢了。剑尖离他心口还有半寸的时候被拔了出来。血从剑背上一滴一滴往下掉——她拔剑的时候，剑刃把他的手掌割开了。</p>
+  <p class="short">那一点疼让他醒了过来。</p>
+  <p>她收剑退开，喝止了身后的同门，转过身对他说了两个字：走吧。</p>
+  <p class="short">他转身要走。</p>
+  <p class="short">有人不肯。</p>
+  <p>焚香谷与天音寺的人先拦在了前头，青云门里也有几个弟子跟着站了出来。他们的理由很硬：一个屠了寨子的人，不能因为一句"走吧"就放掉。十几个人重新合围，把烧塌的寨门口围成了一个圈。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她想拦。可她张不开这个嘴——她拿什么理由拦？她既说不出他是在守寨（她没有证据），也不能说这个人对她还有什么别的意义。她只能站在原地，看着他被围起来。</p></div>
+  <p class="short">就在那时候，林子里的雾动了。</p>
+  <p>一道白影从雾里穿出来，快得没有声音。它先撞开两个人，再一卷，把最前面一排人手里的兵器全都带偏了方向。等众人回身，地上已经多了一串梅花似的脚印——不是人的。</p>
+  <p>来的是个女人。白裙，赤足，眉眼里那点横意不像人。她身后拖着的那道光影里，有九条尾巴的轮廓。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他认得她。早些年在死泽，他救过一只被封住的狐狸，就是小白——那时候她连人形都撑不起来，是他砸开了封住她的东西。他没想到会在这里再见到她。</p></div>
+  <p>她连看都没看那些人，只偏过头，冲他说了一句：还愣着干什么。</p>
+  <p class="short">他走了。这一次他没有回头。</p>
+  <p>那一场遭遇战，正道带回去的说法是：血公子在南疆屠了一个寨子，末了被一只九尾妖狐接走。</p>
+  <p>陆雪琪没有替他说过一句话。但她从此再没有信过那个说法——因为她亲眼看见，他把她的剑往自己身上带。那个时候他不想杀谁，他只是不想活了。</p>
+  </section>
+  <div class="act">
+  <div class="n">第 三 幕</div>
+  <h2>敢面对</h2>
+  <p>退无可退之后，两个人终于承认了同一件事。</p>
+  </div>
+  <section id="c9">
+  <h3>八 · 月下逢</h3>
+  <div class="meta">玉清殿 · 望月台</div>
+  <p>兽神之患在前，正道各派在青云山聚了一场。</p>
+  <p>席上，焚香谷谷主云易岚提了一件事。他说得客气，也说得很有分量：如今正魔对峙、南疆大乱，两派若能联姻，人心可定。他为他门下的弟子李洵，求娶小竹峰最倚重的那名白衣弟子。</p>
+  <p class="short">满堂的人都在看她。</p>
+  <p>道玄真人与水月大师应下了这桩婚事。他们的理由也并非不近人情——流言已经传了很久，说小竹峰的陆雪琪与魔教的血公子有旧。这门亲事既能堵住悠悠众口，也能断了她不该有的念头。</p>
+  <p>所有人都在等她点头。那是一种默认，好像事情已经成了定局。</p>
+  <p>陆雪琪一身白衣站在堂中。她的肩膀在很轻地抖。然后她转过身，望向殿外那片黑暗——那个方向很远，远得什么也看不见。</p>
+  <p class="short">她一字一句地说：我不愿。</p>
+  <p>那不是一句赌气的话。那是当着掌门、当着自己的师父，当着满堂正道说出口的反抗。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她不是讨厌李洵，她甚至觉得那个年轻人没有半点错。她只是没有办法站在这堂上，把自己交给另一个人——从七脉会武之后，她心里就只装过一个人。哪怕那个人如今是魔教的血公子，是所有人嘴里的仇敌。</p></div>
+  <p>堂上一下子炸开了。有人替她说话，更多的人在摇头。</p>
+  <p>最后她被罚禁闭望月台思过，连同门的非议一起罚给了她。</p>
+  <p class="short">千里之外，鬼厉那几天睡得很浅。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>那天夜里他莫名地醒了一次，心口像被人攥了一下，说不清哪里疼。他坐在黑暗里，一直坐到天亮，也没想明白自己为什么会醒。</p></div>
+  <p>几天之后他才听到消息：青云门玉清殿，陆雪琪当众拒婚，被罚上望月台。</p>
+  <p>他把手里的东西放下，当天就动了身。</p>
+  <p class="short">那一夜的月光铺满了望月台。</p>
+  <p>他一路踏着月色上来。廊下坐着一个人，白衣如雪，背对着石阶。她听得见脚步声，却没有回头——她大概不需要回头，就知道是谁。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他站在几步外看她。她瘦了，肩膀比上次更单薄，头发散下来一些。这十年他见过太多死人，也见过太多活人硬撑着的样子，可他还是第一次觉得，有人能把"憔悴"这两个字撑得这么直。</p></div>
+  <p class="short">她转过身来。</p>
+  <p>他看了她很久，才开口。那是一句几乎不像鬼厉会说出来的话：</p>
+  <p>你跟我走。去哪里？随便吧，天涯海角。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她等了这句话，整整十年。这十年里她把这句话在心里排练过太多次，也无数次告诉自己不要再等。可真的听见了，她的手还是在袖子里握紧了。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她动过念头。真的动过。有一瞬间她想，什么都不管了，跟他走，天大地大，总有能容下两个人的地方。</p></div>
+  <p>可她的眼睛抬起来了。她看着他，很轻地问了一句：那碧瑶呢？</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>很多人会以为这是吃醋，是刁难。不是。她问这句话的时候，心里比谁都清楚：他此刻的冲动，是因为她被人逼婚，是因为他心疼她。是心疼，不是选择。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她不要退而求其次的爱情。如果她就这样跟他走，碧瑶就会永远横在他们两个人中间——他心里永远欠着另一个人一条命，永远留着一个位置。她可以做他的退路，但她不要做他的避难所。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她也不是在逼他二选一。她只是把最残酷的现实摊开在他面前：你要带我走，那个还睡在寒冰石室里的人，你打算怎么安放？</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她身上还压着两层枷锁。一边是师门、正道和小竹峰，她不能毫无顾忌地叛出青云；另一边，是眼前这个人心里还站着另一个人。这两层，她一层都挣不开。</p></div>
+  <p>月光下，鬼厉站在那里，半天没有说出话。</p>
+  <p>那句话把他从短暂的温情里拽了回来。方才满腔的勇气像被一盆水浇下去，他重新变成了那个背着十年债的鬼王宗鬼厉——他可以带她走，但他带不走碧瑶；他可以不管天下，可他管不了自己心里那笔账。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他想说"这些我都能解决"，可他说不出口。因为他知道那是骗她的。他这辈子最不愿意骗的人就是她。</p></div>
+  <p class="short">他沉默了很久，最后转过身，走了。</p>
+  <p>那一夜她坐在望月台上，看着他的背影一直走到月光的尽头。</p>
+  <p class="short">月下相逢，逢而不能相守。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她后来常想起那一晚的月色。传说蟾宫里有雪，那一点白像极了一个人的名字。可那不是她的雪——她的心结，就结在这上面。</p></div>
+  </section>
+  <section id="c10">
+  <h3>九 · 八荒火龙</h3>
+  <div class="meta">火龙出现的那一片战场</div>
+  <p class="short">八荒火龙是兽神麾下最强的东西。</p>
+  <p>它出现的时候，天是红的。鬼厉第一个反应过来，回身的时候陆雪琪还站在原地——她的剑刚被磕开，收势还来不及。</p>
+  <p>危险到极致的一瞬间，他没有想，也没有权衡，直接一把把她抱起，转身就往后撤。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>抱起她的时候他什么都没想。等把人放下了才反应过来自己刚才做了什么，耳朵比脑子先热了。</p></div>
+  <p>分开十年，他的身体比他的脑子诚实。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>被抱起来的那一瞬，她本能地想挣开。手抬到一半，又放下了。她太累了，也太想被人这样护一次——这个念头让她一路都没敢抬头。</p></div>
+  <p>落地之后才有一点尴尬。他把她放下，两个人对视了一眼，谁都没提刚才那一下。她先转开了脸，耳朵有点红。</p>
+  </section>
+  <section id="c11">
+  <h3>十 · 冷崖定情</h3>
+  <div class="meta">寒崖 · 月下</div>
+  <p>火龙之战结束之后，两个人都没有马上走。</p>
+  <p>寒崖上风很大，月色很亮。噬魂与天琊被随手插在旁边的石缝里，第一次安静地立在一处——十年里，这两件东西每次见面都在打。</p>
+  <p>她站在离他两步远的地方，看了他很久。十年里所有没说出口的东西，都在那一会儿涌了上来。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她看着他想，如果这一生只能留下一件事，她希望是现在这一件。别的都可以不要。</p></div>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他想说对不起，想说这十年，想说明天怎么办。后来他一句话都没说出口——抱住她的时候他才明白，有些话本来就说不出来，也不需要说。</p></div>
+  <p class="short">谁先动的已经不重要了。</p>
+  <p class="short">两个人抱在了一起。</p>
+  <p>风还在吹，月色还在，远处还有没散尽的烟。这一次没有人再退，也没有人再说话——他们终于允许自己不去想明天。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>十年里他第一次觉得，自己可以什么都不做，就这么站着。</p></div>
+  <p>很久之后，她在他耳边说，别管明天了。</p>
+  <p class="short">他这一次没有反对。</p>
+  </section>
+  <div class="act">
+  <div class="n">第 四 幕</div>
+  <h2>归处</h2>
+  <p>代价要付，日子也要过。最后总得有一个人先回来。</p>
+  </div>
+  <section id="c12">
+  <h3>十一 · 义庄大战</h3>
+  <div class="meta">义庄 · 雨夜</div>
+  <p>道玄真人到底没能扛住诛仙剑里的那股戾气。</p>
+  <p>他在青云山祭剑退敌之后，人就不太对了。先是话变少，后来是看人的眼神不对；再后来，他连掌门的位置都不要了，一句话没留，离开了青云，从此不知所踪。</p>
+  <p class="short">田不易去找过他。</p>
+  <p>他知道那不只是入魔——那是被一把上古凶剑一寸一寸吃掉了心智。他一个人去了祖师祠堂，想把师兄劝回来。</p>
+  <p class="short">没劝回来。</p>
+  <p>两个人打了一场，田不易不是对手，被擒了。道玄没有杀他，用的是诛心锁：把他封进义庄的一口棺材里，再用诛仙剑的凶煞之力控住他的肉身，留作后手。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>被钉进棺材的时候，田不易想的不是自己。他想的是徒弟——老七那孩子在魔教待了十年，如今师门里还有谁拦得住他。</p></div>
+  <p>水月大师派陆雪琪下山，查道玄与田不易的下落。</p>
+  <p>她一路循着赤焰剑的气息找过来。那口棺材上的道法，是青云门的东西，强得让人心里发凉。她在棺前站了一会儿，没有犹豫太久。天琊出鞘，一剑击碎了棺木上的诛心锁。</p>
+  <p class="short">棺材开了。田不易走了出来。</p>
+  <p>他看上去很如常，能走，能说话，甚至还笑了一下。可陆雪琪站得近，看见他衣领下面的皮肤上浮着一层很淡的黑气。</p>
+  <p class="short">她当时以为那是伤。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她后来一辈子都在想这件事：如果那天她看出来那是别的什么，后面的事会不会不一样。</p></div>
+  <p>鬼厉是循着诛仙剑的气息追到义庄的。</p>
+  <p>他进门的时候雨下得正大。义庄破得只剩几根梁，风从破洞里灌进来，吹得满地纸钱乱转。</p>
+  <p>先开口的是田不易。老人看着他，喊了一声：老七。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>这两个字，他有十年没听过了。这十年里他被人叫血公子、叫鬼厉、叫魔头，没有人再叫他这个名字。他站在原地，一时不知道该不该应这一声。</p></div>
+  <p>师徒两个隔着几步站着，谁都没先提这些年的对错。田不易问他瘦了没有，吃得好不好，问他手上那把棍子重不重。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>田不易甚至动了一个念头——荒唐得他自己都觉得可笑：等这件事了了，他替老七去小竹峰提个亲。他还记得七脉会武那一年，这孩子从山上回来以后，一个人在天井里坐到半夜。</p></div>
+  <p class="short">可这份温情只维持了很短的时间。</p>
+  <p class="short">入魔的道玄真人现身了。</p>
+  <p>他站在檐下的雨幕里，眼睛是浑的，握剑的手却很稳。他没有多讲一句话，抬手就是杀招。</p>
+  <p>三个人并肩站到了一起：鬼厉、陆雪琪、田不易。噬魂、天琊、赤焰，三柄兵器同时出手。这是十年里师徒二人第一次站在一起，也是张小凡第一次和师父、和她站在同一条线上。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她看着那两个人——一个是被逐出师门的徒弟，一个是护着他长大的师父——忽然觉得，如果他们不是在这样的时候才站到一起，该有多好。</p></div>
+  <p>道玄的修为本就冠绝天下，手里又是那把诛仙剑，杀伐之力几乎没有尽头。三个人拼尽全力，还是渐渐落了下风。</p>
+  <p class="short">然后道玄不硬拼了。</p>
+  <p class="short">他往后退了半步，掐了一个诀。</p>
+  <p class="short">田不易的动作停了。</p>
+  <p>他站在雨里，胸口起伏得很慢，像是有什么东西正从他身体里醒过来。下一瞬他抬起头的时候，眼睛已经不再是他自己的了。</p>
+  <p>诛仙剑的戾气在他体内被点着了。他的肉身被硬生生夺了过去，可他这个人还在——他清清楚楚地看着自己的手举起来，看着赤焰剑被自己的手握住，看着自己的脚一步一步往前走。</p>
+  <p class="short">走向的是他这辈子最疼的那个徒弟。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>田不易这辈子什么都没怕过。他最怕的不是死，是有朝一日亲手伤到自己的孩子。这一夜，这件事正发生在他眼前。</p></div>
+  <p>雨打在他脸上，他一个字都喊不出来。</p>
+  <p>走到还有五步的时候，他忽然把头转了过去。</p>
+  <p class="short">他看向陆雪琪。</p>
+  <p>他什么也没说，可那双眼睛里的意思很清楚——他在求她杀了他。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她读懂了。那一刻她的心跳几乎停了。一边是青云的师叔、是张小凡的恩师；另一边，是如果他不动手，鬼厉就要死在这把剑下。她只有一瞬可以决定。那一瞬里她想的是：这一剑落下去，我这辈子就再也洗不干净了。</p></div>
+  <p class="short">她还是动了。</p>
+  <p>天琊催动，蓝光一闪，一剑洞穿了田不易的胸膛。</p>
+  <p>被诛仙剑禁制住的东西，顺着这一剑散了。</p>
+  <p>田不易借着这一剑夺回了自己。他倒下去的时候，眼睛已经清亮了。他看着陆雪琪，先说的是：此事不怪雪琪。</p>
+  <p>然后他转向鬼厉，交代了最后一件事：把他带回大竹峰，交给他师娘苏茹，劝她好好活下去。</p>
+  <p class="short">话音落下，人就没有了。</p>
+  <p>雷雨倾盆。义庄里，鬼厉跪在泥水里，看着师父死在自己眼前，死在陆雪琪剑下。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>那一刻他什么都听不见了。他这十年受过很多次伤，没有一次像这一次——像是有人在里面把什么东西折断了。他知道这一剑该落，也知道除了她没有人能落这一剑。可他抬头看她的那一眼里，还是有一样东西冷了下去。</p></div>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他不是恨她。他恨的是自己：正邪、命运、他这十年的路，全都在一件一件地伤他身边的人。他甚至不敢想，如果当年他没有下山，师父今天会不会还站在这里。</p></div>
+  <p>他抱起师父的尸身，走进雨里。他没有跟她说一句话。</p>
+  <p class="short">后来他回了大竹峰。</p>
+  <p>师娘苏茹把诛仙剑操控的来龙去脉，一件一件说给了他听——包括田不易早就知道自己难逃这一劫，包括那一剑是他自己用眼神求来的。</p>
+  <p>他听完以后，一个人在天井里坐了一整夜。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他这才明白，那一剑不是杀，是解脱。可明白得太晚了——他对她冷下去的这几个月，已经收不回来了。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>义庄这一剑，是陆雪琪一生最大的心劫。她明明看懂了那个眼神，也清楚那是唯一的选择；可出手的终究是她，亲手杀死青云长辈的也是她。从那天起，她心里就压下了这样一件东西：一边是师门道义，一边是爱人的师父，无论选哪边，都是万劫不复。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>望月台上那句"那碧瑶呢"，是她感情上的枷锁；义庄的这一剑，是命运套给她的现实枷锁。这两件事她都认了，一个人扛着，谁也没告诉。</p></div>
+  <p>至于道玄真人，他并不是生来就恶。一代青云掌门，被一把上古凶剑一寸一寸吃掉了本心，最后活成了那把剑想要的样子。</p>
+  <p>他这一生最信的是诛仙剑，最后也是那把剑，替他把所有的决定都做完了。</p>
+  </section>
+  <section id="c13">
+  <h3>十二 · 红鸾笑</h3>
+  <div class="meta">大竹峰 · 婚宴之夜</div>
+  <p>义庄那一夜之后，两个人心里都留下了一道疤。</p>
+  <p>再往后的事，天下人都知道：鬼王炼成四灵血阵，催动修罗之力攻打青云。通天峰上那一战，张小凡拿起了诛仙剑，把鬼王斩于剑下。狐岐山崩塌的时候，碧瑶的肉身也不见了——他找了十年的那个人，连最后一具身体都没能留住。</p>
+  <p class="short">多年执念，到那一刻落了地。</p>
+  <p>大战结束，他把诛仙剑还了回去，一个人回到草庙村的废墟上住下。他不想再见人，也不想再拿兵器，日子过得像一潭死水——心如死灰这四个字，用在他身上刚刚好。</p>
+  <p>陆雪琪辞了小竹峰首座的位置，下山找到草庙村。</p>
+  <p>她没有劝他，也没有讲道理，只是留下来陪着。生火、挑水、把塌了半边的屋子一点一点修回去。她陪了很多天。有一天他忽然发现，自己会为锅里的一顿饭想事情了，才知道自己已经被人从那个地方拉了出来。</p>
+  <p class="short">后来是她提的：回大竹峰吧。</p>
+  <p>他回去了。大竹峰还在，院子还在，灶台还在。只是疼他的师父不在了，师娘苏茹也不在了。大师兄宋大仁做了大竹峰首座，人还是那副样子，就是话更少了。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他站在山门前站了很久才进去。他这十年进过太多不该进的地方，唯独回家的路，他走得最慢。</p></div>
+  <p class="short">他重新做回了那个做饭的厨子。</p>
+  <p>刀还是那几把，锅还是那口锅，连柴堆的位置都没变。他每天天不亮就起来烧火，师兄弟们起来就有饭。吃饭的时候一屋子人说说笑笑，跟很多年前一样——可他坐在那儿，总觉得少了两个人。那两个位置一直空着，谁也没提过要去坐。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>有一次他做完饭，站在灶台前没有动。他忽然想起很多年前，师父就在这里骂他笨手笨脚。他站了很久，直到有人喊他吃饭。</p></div>
+  <p>大师兄宋大仁喜欢小竹峰的文敏，喜欢了很多年。</p>
+  <p>可这个人木讷，喜欢也只会藏在心里。他会为了文敏一句话把大竹峰上下打扫三遍，会在文敏来的时候突然变得不会说话，然后一个人躲进柴房，一躲半天。</p>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>这些陆雪琪都看在眼里。她比谁都清楚"说不出口"是什么滋味——她在望月台上没有说出口的那句话，比这位大师兄还早十年。</p></div>
+  <p>于是张小凡和她一起，从中间撮合了这件事。</p>
+  <p>说到底，这也正是田不易生前最大的心愿：大竹峰和小竹峰这两脉，能再续一桩姻缘。</p>
+  <p>一个月之后，大竹峰的院子里张灯结彩，宋大仁和文敏成亲。青云门上下的宾客都来了，喜气满堂，鞭炮从山门一路炸到院门口。</p>
+  <p>热闹都在前院。厨房门口反倒安静，只挂了两盏红灯笼。</p>
+  <p>陆雪琪是从后头绕过来的。路过厨房的时候，她无意间抬头，看见门扇两边贴着一副红对联。纸是新的，墨是干的，字是手写的。</p>
+  <p>她轻声念了出来：忽闻下界笙箫曲，斜倚红鸾笑不休。</p>
+  <p class="short">念完，她的脸红了。</p>
+  <p>他就在旁边，手上还沾着灶灰。他轻声跟她说了一句：这是我写的。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他写的是这样一层意思：听见人间传来喜庆的笙箫，掌管姻缘的那只红鸾，倚在星辰边上，笑得停不下来。那不是一句直白的告白，是一句藏起来的话——是他这一生第一次主动说出口的喜欢。</p></div>
+  <p>为了这一句话，他跨过了很多东西：跨过碧瑶留下的那些年，跨过正邪之间那道线，跨过义庄雨夜里刺进师父胸膛的那一剑。</p>
+  <div class="inner he"><span class="who">张小凡 · 鬼厉</span>
+  <p>他以前总觉得，只要不说出来，就不算对不起任何人。那天他站在灯笼底下，看着她的侧脸，第一次觉得，把话说出口，反倒是对所有人的交代。</p></div>
+  <div class="inner she"><span class="who">陆雪琪</span>
+  <p>她站在那副对联前面，一个字一个字看了很久。她认得那笔字——那不是一个读过很多书的人写的字，可写得很认真，一笔都没有抖。</p></div>
+  <p class="short">那天夜里没有拜堂，也没有人起哄。</p>
+  <p>前面的院子里灯火漫天，笑声一阵一阵传过来。他从门框边上伸出手，轻轻握住了她的手。</p>
+  <p class="short">两个人相视一笑。</p>
+  <p>十年风雨、一次拒婚、一世心结，到这一刻都不必再说。那两盏红灯笼在风里晃了一下，把两个人的影子拖在了一起。</p>
+  <p>望月台上那一次月下相逢，求而不得；大竹峰这一夜的灯火之下，苦尽甘来。</p>
+  <p>后来他们就成了亲。没有什么惊天动地的仪式——大竹峰的人知道，小竹峰的人知道，这就够了。</p>
+  <p>那一夜大竹峰的灯亮到很晚。有人从前院经过，看见厨房门口站着两个人：一个白衣，一个沾着灶灰，谁都没有说话。</p>
+  </section>
+
+  <div class="end">全 文 完</div>
+
+  <footer>
+    <p>全文完。</p>
+    <p>本故事依据公开剧情资料整理改写，为二次叙述，非原文引用；人物与情节版权归原作者及出品方所有。</p>
+    
+    <p>共 68 段心理活动 · 背景视频本地循环播放，静音、不上传。</p>
+    <p>本故事依据公开剧情资料整理改写，为二次叙述，非原文引用；人物与情节版权归原作者及出品方所有。</p>
+  </footer>
+</div>
+<script>
+  /* 阅读进度 + 目录高亮 */
+  var prog = document.getElementById('prog');
+  var links = Array.prototype.slice.call(document.querySelectorAll('.toc a'));
+  var targets = links.map(function (a) { return document.querySelector(a.getAttribute('href')); });
+  function onScroll() {
+    var h = document.documentElement;
+    var max = (h.scrollHeight - h.clientHeight) || 1;
+    prog.style.width = Math.min(100, (h.scrollTop / max) * 100) + '%';
+    var best = -1, bestTop = -1e9;
+    for (var i = 0; i < targets.length; i++) {
+      if (!targets[i]) continue;
+      var top = targets[i].getBoundingClientRect().top;
+      if (top <= 220 && top > bestTop) { bestTop = top; best = i; }
+    }
+    links.forEach(function (a, i) { a.classList.toggle('on', i === best); });
+  }
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  /* 视频背景：双轨交叉淡化，实现无缝循环 */
+  (function () {
+    var wrap = document.getElementById('bgwrap');
+    if (!wrap) return;
+    var vs = [document.getElementById('vA'), document.getElementById('vB')];
+    if (!vs[0] || !vs[1]) return;
+    var FADE = 1.2;                  // 交叉淡化时长（秒）
+    var cur = 0, busy = false, broken = false;
+
+    function play(v) {
+      var p = v.play();
+      if (p && p.catch) { p.catch(function () { broken = true; }); }
+    }
+    vs.forEach(function (v) { try { v.load(); } catch (e) {} });
+    vs[0].style.opacity = 1;
+    play(vs[0]);
+
+    function tick() {
+      if (!broken && !busy) {
+        var a = vs[cur], b = vs[1 - cur], d = a.duration;
+        if (d && d > FADE * 2.4) {
+          if (d - a.currentTime <= FADE) {
+            busy = true;
+            try { b.currentTime = 0; } catch (e) {}
+            b.style.opacity = 0;
+            play(b);
+            var t0 = performance.now();
+            (function step(now) {
+              var k = Math.min(1, (now - t0) / (FADE * 1000));
+              b.style.opacity = k;
+              a.style.opacity = 1 - k;
+              if (k < 1) { requestAnimationFrame(step); return; }
+              a.pause();
+              try { a.currentTime = 0; } catch (e) {}
+              a.style.opacity = 0;
+              b.style.opacity = 1;
+              cur = 1 - cur;
+              busy = false;
+            })(t0);
+          }
+        }
+      }
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+
+    var on = true, paused = false;
+    var bt = document.getElementById('bgToggle'), bp = document.getElementById('bgPause');
+    bt.onclick = function () {
+      on = !on;
+      wrap.style.display = on ? '' : 'none';
+      document.getElementById('veil').style.display = on ? '' : 'none';
+      document.getElementById('grain').style.display = on ? '' : 'none';
+      bt.textContent = on ? '背景 开' : '背景 关';
+    };
+    bp.onclick = function () {
+      paused = !paused;
+      vs.forEach(function (v) {
+        if (paused) { v.pause(); }
+        else if (v.style.opacity !== '0') { play(v); }
+      });
+      bp.textContent = paused ? '播放' : '暂停';
+    };
+  })();
+</script>
+</body>
+</html>
